@@ -169,6 +169,12 @@ importers:
       '@biomejs/biome':
         specifier: 2.6.3
         version: 2.6.3
+      typescript:
+        specifier: 7.0.2
+        version: 7.0.2
+
+  packages/example:
+    devDependencies:
       '@types/node':
         specifier: 26.6.5
         version: 26.6.5

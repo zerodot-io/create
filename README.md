@@ -1,6 +1,17 @@
 # Create a zerodot node package
 
-A template for a community node package for [zerodot](https://github.com/zerodot-io/zerodot). It has two example nodes, one credential type, tests, and a script that writes `registry.json`.
+A template for community node packages for [zerodot](https://github.com/zerodot-io/zerodot). One repository holds one registry. The registry lists each package in `packages/*`, and each package can have many nodes.
+
+```
+registry.json            one address that an admin adds
+packages/
+  example/               one npm package: zerodot-example
+    src/text-case.ts     a node
+    src/api-request.ts   a node
+    src/credential.ts    a credential type
+```
+
+The `example` package has two nodes, one credential type, and tests:
 
 - `Text Case` (`src/text-case.ts`): a node with no credential. It changes the input and sends it on.
 - `Example API Request` (`src/api-request.ts`): a node with a credential. It calls an API and sends the JSON answer on.
@@ -9,9 +20,12 @@ A template for a community node package for [zerodot](https://github.com/zerodot
 ## Start
 
 1. Click **Use this template** on GitHub, or copy this folder.
-2. In `package.json`, change `name`, `description`, `zerodot.label`, and `zerodot.summary`. The name without the scope must start with `zerodot-`, for example `zerodot-slack` or `@acme/zerodot-slack`. zerodot does not show other names from a registry.
-3. Change the node types. Start each type with your own prefix (for example `acme.slack.send`), so it is not the same as the type of another package. A package cannot replace a built-in node.
-4. Put your icon in `icon.svg`.
+2. In the root `package.json`, set `zerodot.registry.name` (the name that admins see) and `zerodot.registry.homepage`.
+3. Rename `packages/example`. In its `package.json`, change `name`, `description`, `zerodot.label`, and `zerodot.summary`. The name without the scope must start with `zerodot-`, for example `zerodot-slack` or `@acme/zerodot-slack`. zerodot does not show other names from a registry.
+4. Change the node types. Start each type with your own prefix (for example `acme.slack.send`), so it is not the same as the type of another package. A package cannot replace a built-in node.
+5. Put your icon in `icon.svg`.
+
+To add another package, copy `packages/example` to `packages/<name>` and change it in the same way. Put nodes that people install together in one package. Make a new package for a different app or service.
 
 ```sh
 pnpm install
@@ -21,6 +35,8 @@ pnpm run lint
 ```
 
 ## The package contract
+
+Each package in `packages/*`:
 
 - `src/index.ts` exports `nodes` and can export `credentialTypes`.
 - `package.json` has `"zerodot": { "sdk": "^1.2" }`: the node contract versions that the package works with. zerodot checks the range before it runs any package code.
@@ -33,13 +49,13 @@ See the [official packages](https://github.com/zerodot-io/nodes) for more exampl
 
 ## Publish
 
-1. Publish the package to npm:
+1. Publish each new or changed package to npm:
 
    ```sh
-   pnpm publish
+   pnpm --filter zerodot-example publish
    ```
 
-2. Write `registry.json`. The script builds the package and reads the nodes from it:
+2. Write `registry.json`. The script builds all packages and reads the nodes from them. A package that is `private`, or has no `zerodot.sdk`, is not in the list:
 
    ```sh
    pnpm run registry
@@ -51,9 +67,9 @@ See the [official packages](https://github.com/zerodot-io/nodes) for more exampl
    https://raw.githubusercontent.com/<you>/<repo>/main/registry.json
    ```
 
-4. In zerodot, an instance admin opens **System > Nodes > Community registries**, clicks **Add registry**, and pastes the address. Your package then shows in the Community group.
+4. In zerodot, an instance admin opens **System > Nodes > Community registries**, clicks **Add registry**, and pastes the address. Your packages then show in the Community group.
 
-Run `pnpm run registry` again after each new version. zerodot installs the version that `registry.json` lists, and reads the file again after ten minutes. You can list more than one package in one `registry.json`.
+Run `pnpm run registry` again after each new version. zerodot installs the version that `registry.json` lists, and reads the file again after ten minutes. Publish the version to npm before you push `registry.json`.
 
 ## Security
 

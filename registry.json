@@ -1,5 +1,6 @@
 {
-  "name": "Example",
+  "name": "Example nodes",
+  "homepage": "https://github.com/zerodot-io/create",
   "packages": [
     {
       "name": "zerodot-example",

@@ -1,52 +1,26 @@
 {
-  "name": "zerodot-example",
-  "version": "0.1.0",
-  "description": "Example nodes for zerodot: change the case of text, and call a JSON API with a token. Copy this package to make your own nodes.",
+  "name": "zerodot-create",
+  "private": true,
   "license": "MIT",
-  "keywords": [
-    "zerodot-node-package"
-  ],
-  "type": "module",
-  "main": "./dist/index.cjs",
-  "exports": {
-    ".": "./dist/index.cjs"
-  },
-  "files": [
-    "dist",
-    "icon.svg"
-  ],
-  "zerodot": {
-    "sdk": "^1.2",
-    "label": "Example",
-    "summary": "Change text case and call a JSON API"
-  },
   "packageManager": "pnpm@12.15.0",
   "engines": {
     "node": ">=22"
   },
+  "zerodot": {
+    "registry": {
+      "name": "Example nodes",
+      "homepage": "https://github.com/zerodot-io/create"
+    }
+  },
   "scripts": {
-    "build": "tsdown",
-    "check-types": "tsc -p tsconfig.json",
-    "test": "tsx --test src/*.test.ts",
+    "build": "pnpm -r run build",
+    "check-types": "pnpm -r run check-types",
+    "test": "pnpm -r run test",
     "lint": "biome check .",
-    "registry": "pnpm run build && node scripts/build-registry.mjs",
-    "prepublishOnly": "pnpm run build"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {},
-  "peerDependencies": {
-    "@zerodot/node-sdk": "^1.2.0",
-    "zod": "^4.0.0"
+    "registry": "pnpm run build && node scripts/build-registry.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "2.6.3",
-    "@types/node": "26.6.5",
-    "@zerodot/node-sdk": "^1.2.1",
-    "tsdown": "0.23.2",
-    "tsx": "4.23.15",
-    "typescript": "7.0.2",
-    "zod": "4.6.7"
+    "typescript": "7.0.2"
   }
 }
