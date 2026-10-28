@@ -10,6 +10,21 @@ const readJson = (file) => JSON.parse(readFileSync(file, "utf8"));
 const settings = readJson(join(root, "package.json")).zerodot?.registry ?? {};
 if (!settings.name) throw new Error('Set "zerodot.registry.name" in the root package.json');
 
+// zerodot installs a community package only when npm has this exact checksum for the version.
+const npmRegistry = (process.env.ZERODOT_NPM_REGISTRY || "https://registry.npmjs.org").replace(
+  /\/+$/,
+  "",
+);
+async function integrityOf(name, version) {
+  const response = await fetch(`${npmRegistry}/${name.replace("/", "%2f")}`);
+  const packument = response.ok ? await response.json() : null;
+  const integrity = packument?.versions?.[version]?.dist?.integrity;
+  if (!integrity?.startsWith("sha512-")) {
+    throw new Error(`${name}@${version} is not on npm. Publish it first, then run this again`);
+  }
+  return integrity;
+}
+
 const packages = [];
 for (const folder of readdirSync(join(root, "packages")).sort()) {
   const dir = join(root, "packages", folder);
@@ -29,6 +44,7 @@ for (const folder of readdirSync(join(root, "packages")).sort()) {
     description: json.description ?? "",
     version: json.version,
     sdk: json.zerodot.sdk,
+    integrity: await integrityOf(json.name, json.version),
     ...(icon?.icon ? { icon: icon.icon } : {}),
     ...(icon?.iconUrl ? { iconUrl: icon.iconUrl } : {}),
     nodes: loaded.nodes.map((node) => ({

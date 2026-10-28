@@ -55,7 +55,7 @@ See the [official packages](https://github.com/zerodot-io/nodes) for more exampl
    pnpm --filter zerodot-example publish
    ```
 
-2. Write `registry.json`. The script builds all packages and reads the nodes from them. A package that is `private`, or has no `zerodot.sdk`, is not in the list:
+2. Write `registry.json`. The script builds all packages, reads the nodes from them, and gets the npm checksum (`integrity`) of each version. A package that is `private`, or has no `zerodot.sdk`, is not in the list:
 
    ```sh
    pnpm run registry
@@ -69,7 +69,19 @@ See the [official packages](https://github.com/zerodot-io/nodes) for more exampl
 
 4. In zerodot, an instance admin opens **System > Nodes > Community registries**, clicks **Add registry**, and pastes the address. Your packages then show in the Community group.
 
-Run `pnpm run registry` again after each new version. zerodot installs the version that `registry.json` lists, and reads the file again after ten minutes. Publish the version to npm before you push `registry.json`.
+Run `pnpm run registry` again after each new version. zerodot installs the version that `registry.json` lists, and reads the file again after ten minutes. Publish the version to npm before you run the script: it needs the checksum from npm.
+
+zerodot installs a package only when npm has the same checksum as `registry.json`, and it drops an entry with no checksum. So the files that people install are the files that you published.
+
+## Get verified
+
+The zerodot team can review a version of your package. A verified version shows a "Verified" badge in zerodot, and instances with `ZERODOT_UNVERIFIED_NODES=false` can install only verified versions.
+
+1. Make the source public (for example on GitHub), with a tag for the version.
+2. Open an issue in [zerodot-io/nodes](https://github.com/zerodot-io/nodes/issues) with the package name, the version, the checksum from `registry.json`, and the address of the tag.
+3. The team reads the source, builds it, and checks that it gives the files on npm. When it is fine, the team adds the version to `verified.json` in that repository.
+
+Each new version needs a new review. Keep the package small and with few dependencies: that makes the review faster.
 
 ## Limits of a community package
 
