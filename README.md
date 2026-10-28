@@ -71,8 +71,25 @@ See the [official packages](https://github.com/zerodot-io/nodes) for more exampl
 
 Run `pnpm run registry` again after each new version. zerodot installs the version that `registry.json` lists, and reads the file again after ten minutes. Publish the version to npm before you push `registry.json`.
 
+## Limits of a community package
+
+zerodot runs a community package in its own process, so it cannot read the secrets of zerodot. Your package gets the config, the input, and the credential of each call. In that process your code:
+
+- can use the network.
+- can read files in its own package only. It cannot write files, start programs or worker threads, or load native addons.
+- has 256 MB of memory.
+- gets no expression scope, data tables, code sandbox, or sub-workflows. `ctx.scope` is not set, and `ctx.sandbox`, `ctx.tables`, and `ctx.runWorkflow` are null.
+
+These parts of the node contract do not work in a community package. zerodot skips a node or a credential type that uses one:
+
+- `outPorts()` and `inPorts()`. Use fixed `ports`.
+- `waitForm()` and `waitsForCallback()`.
+- An `oauth2` function in a credential type. A fixed OAuth2 config works.
+
+`run`, `poll`, `listen`, `webhook`, credential `test()`, run logs, and the abort signal work.
+
 ## Security
 
-A node package runs on the zerodot server with all the rights of zerodot. zerodot shows a strong warning before an admin adds your registry or installs your package. Keep your npm account safe (use two-factor authentication), and do not publish code that you did not read.
+zerodot shows a strong warning before an admin adds your registry or installs your package. Keep your npm account safe (use two-factor authentication), and do not publish code that you did not read.
 
 MIT license.
