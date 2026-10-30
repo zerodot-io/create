@@ -12,7 +12,7 @@ export const apiCredential: CredentialTypeDefinition = {
     token: z.string().min(1),
   }),
   secretFields: ["token"],
-  icon: "KeyRound",
+  icon: "Key01Icon",
   iconUrl: ICON,
   // Optional. The "Test" button of the credential calls it. Throw when the credential does not work.
   async test(credential) {

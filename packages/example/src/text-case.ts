@@ -39,7 +39,7 @@ export default defineNode({
   description: "Change text to upper, lower, or title case",
   category: "data",
   app: "Example",
-  icon: "CaseSensitive",
+  icon: "TextIcon",
   iconUrl: ICON,
   config,
   defaultConfig: { field: "text", case: "upper" },

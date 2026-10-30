@@ -17,7 +17,7 @@ export default defineNode({
   description: "Get JSON from an API with a token",
   category: "integration",
   app: "Example",
-  icon: "Globe",
+  icon: "Globe02Icon",
   iconUrl: ICON,
   credentialTypes: ["example.api"],
   config,
