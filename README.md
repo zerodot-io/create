@@ -23,7 +23,11 @@ The `example` package has two nodes, one credential type, and tests:
 2. In the root `package.json`, set `zerodot.registry.name` (the name that admins see) and `zerodot.registry.homepage`.
 3. Rename `packages/example`. In its `package.json`, change `name`, `description`, `zerodot.label`, and `zerodot.summary`. The name without the scope must start with `zerodot-`, for example `zerodot-slack` or `@acme/zerodot-slack`. zerodot does not show other names from a registry.
 4. Change the node types. Start each type with your own prefix (for example `acme.slack.send`), so it is not the same as the type of another package. A package cannot replace a built-in node.
-5. Put your icon in `icon.svg`. Each node also has an `icon` name: an export name of [Hugeicons](https://hugeicons.com) (`@hugeicons/core-free-icons`), for example `Mail01Icon`. zerodot shows it when there is no `iconUrl`. A name that zerodot does not know shows a circle.
+5. Set the icon. Each node has two icon fields:
+   - `iconUrl`: your logo. Put it in `icon.svg` (`.png` and `.webp` also work). `src/icon.ts` reads the file when the package loads. If the file is missing, the package does not load.
+   - `icon`: the name of a [Hugeicons](https://hugeicons.com) icon (an export of `@hugeicons/core-free-icons`), for example `Mail01Icon`. zerodot shows it only when the node has no `iconUrl`. A name that zerodot does not know shows a circle.
+
+   To use only the Hugeicons icon, delete `icon.svg`, `src/icon.ts`, and each `iconUrl` line, and remove `icon.svg` from `files` in `package.json`.
 
 To add another package, copy `packages/example` to `packages/<name>` and change it in the same way. Put nodes that people install together in one package. Make a new package for a different app or service.
 
